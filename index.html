@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" id="Input_url_container">
+        <label for="url_input" class="Input_url_prefix">http://localhost:8000/api/</label>
+        <input id="url_input" class="Input-url" type="text">
+        <button type="submit" class="Input-url-submit">submit</button>
+    </form>
+    <div id="json_viewer"></div>
+
+    <script>
+        async function fetchData(endpoint){
+            try {
+                const response = await fetch('http://localhost:8000/api/' + endpoint);
+                const responseData = await response.json();
+                document.getElementById('json_viewer').innerText = JSON.stringify(responseData);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('json_viewer').innerText = "Invalid input. Check your input!";
+            }
+        }
+
+        document.getElementById("Input_url_container").addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const endpoint = document.getElementById("url_input").value;
+            fetchData(endpoint);
+        });
+    </script>
+</body>
+</html>

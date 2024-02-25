@@ -18,6 +18,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Content-typeヘッダーをapplication/jsonに設定
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
 	// マップをjsonにエンコードしてレスポンスとして送信
@@ -31,6 +32,7 @@ func categoryHandler(w http.ResponseWriter, r *http.Request) {
 		"category": animals,
 	}
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
 	json.NewEncoder(w).Encode(response)
@@ -75,6 +77,7 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 		"result": result,
 	}
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
