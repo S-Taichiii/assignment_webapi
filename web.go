@@ -42,13 +42,13 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 
 	x, err := strconv.ParseFloat(query.Get("x"), 64)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	y, err := strconv.ParseFloat(query.Get("y"), 64)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -62,10 +62,13 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 		result = x * y
 	case "/":
 		if y == 0 {
-			http.Error(w, "error: division by 0.", 500)
+			http.Error(w, "error: division by 0.", http.StatusBadRequest)
 			return
 		}
 		result = x / y
+	default:
+		http.Error(w, "Invalid operator", http.StatusBadRequest)
+		return
 	}
 
 	response := map[string]float64{
