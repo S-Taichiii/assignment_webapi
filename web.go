@@ -42,13 +42,13 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 
 	x, err := strconv.ParseFloat(query.Get("x"), 64)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "x is not number. x must be number,", http.StatusBadRequest)
 		return
 	}
 
 	y, err := strconv.ParseFloat(query.Get("y"), 64)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "y is not number. y must be number,", http.StatusBadRequest)
 		return
 	}
 
