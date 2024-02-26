@@ -3,9 +3,34 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
+
+var htmlStr string
+
+func main() {
+	fmt.Println("Starting the server!")
+
+	data, err := os.ReadFile("index.html")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	htmlStr = string(data)
+
+	// ルートとハンドラ関数を定義
+	http.HandleFunc("/", showHtml)
+	http.HandleFunc("/api/hello", helloHandler)
+	http.HandleFunc("/api/categories", categoryHandler)
+	http.HandleFunc("/api/calculator", calculateHandler)
+
+	// 8000番ポートでサーバを開始
+	http.ListenAndServe(":8000", nil)
+}
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	// クエリパラメータを解析する
@@ -18,7 +43,6 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Content-typeヘッダーをapplication/jsonに設定
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
 	// マップをjsonにエンコードしてレスポンスとして送信
@@ -32,7 +56,6 @@ func categoryHandler(w http.ResponseWriter, r *http.Request) {
 		"category": animals,
 	}
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 
 	json.NewEncoder(w).Encode(response)
@@ -77,19 +100,10 @@ func calculateHandler(w http.ResponseWriter, r *http.Request) {
 		"result": result,
 	}
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
 
-func main() {
-	fmt.Println("Starting the server!")
-
-	// ルートとハンドラ関数を定義
-	http.HandleFunc("/api/hello", helloHandler)
-	http.HandleFunc("/api/categories", categoryHandler)
-	http.HandleFunc("/api/calculator", calculateHandler)
-
-	// 8000番ポートでサーバを開始
-	http.ListenAndServe(":8000", nil)
+func showHtml(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, htmlStr)
 }
